@@ -3,6 +3,9 @@ uuid = "29e68bc2-51e3-4ea0-8ec0-37612664b27e"
 authors = ["Brian Brewer bbrewer.email@gmail.com"]
 version = "1.0.0-DEV"
 
+[deps]
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
 [compat]
 julia = "1.10"
 
