@@ -1,0 +1,3 @@
+[submodule "external/hand-isomorphism"]
+	path = external/hand-isomorphism
+	url = https://github.com/brewer-b/hand-isomorphism
