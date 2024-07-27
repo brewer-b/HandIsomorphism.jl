@@ -1,0 +1,6 @@
+# HandIsomorphism
+
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://brewer-b.github.io/HandIsomorphism.jl/stable/)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://brewer-b.github.io/HandIsomorphism.jl/dev/)
+[![Build Status](https://github.com/brewer-b/HandIsomorphism.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/brewer-b/HandIsomorphism.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Coverage](https://codecov.io/gh/brewer-b/HandIsomorphism.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/brewer-b/HandIsomorphism.jl)
