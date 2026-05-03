@@ -71,3 +71,18 @@ end
         @test index(PERFECT_RECALL, 4, out) == idx
     end
 end
+
+@testset "recall functions do not allocate" begin
+    cards = UInt8[1, 4, 9, 18, 23, 52, 47]
+    idx = index(PERFECT_RECALL, 4, cards)
+    out = Vector{UInt8}(undef, cards_at_round(PERFECT_RECALL, 4))
+
+    round_size(PERFECT_RECALL, 4)
+    cards_at_round(PERFECT_RECALL, 4)
+    unindex(PERFECT_RECALL, 4, idx, out)
+
+    @test @allocated(index(PERFECT_RECALL, 4, cards)) == 0
+    @test @allocated(round_size(PERFECT_RECALL, 4)) == 0
+    @test @allocated(cards_at_round(PERFECT_RECALL, 4)) == 0
+    @test @allocated(unindex(PERFECT_RECALL, 4, idx, out)) == 0
+end
