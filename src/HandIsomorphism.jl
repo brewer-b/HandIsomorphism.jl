@@ -1,6 +1,6 @@
 module HandIsomorphism
 
-export round_size, index, unindex_all
+export Recall, round_size, index, unindex, cards_at_round
 
 const SUITS = 4
 const RANKS = 13
@@ -865,5 +865,7 @@ const NTH_UNSET = _make_nth_unset()
 const NCR_RANKS = _make_ncr_ranks()
 const RANK_SET_TO_INDEX, INDEX_TO_RANK_SET = _make_rank_index_tables(NCR_RANKS)
 const SUIT_PERMUTATIONS = _make_suit_permutations(NTH_UNSET)
+
+include("recall.jl")
 
 end
