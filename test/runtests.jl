@@ -1,46 +1,44 @@
 using HandIsomorphism
 using Test
 
-const HI = HandIsomorphism
+recall_spec(recall) = [Int.(collect(round)) for round in recall.cards_per_round_per_round]
+
+@testset "recall constants" begin
+    @test recall_spec(IMPERFECT_RECALL) == [[2], [2, 3], [2, 4], [2, 5]]
+    @test recall_spec(PERFECT_RECALL) == [[2], [2, 3], [2, 3, 1], [2, 3, 1, 1]]
+    @test recall_spec(FLOP_RECALL) == [[2], [2, 3], [2, 3, 1], [2, 3, 2]]
+    @test recall_spec(BOARD_RECALL) == [[1], [3], [4], [5]]
+
+    @test [cards_at_round(IMPERFECT_RECALL, round) for round in 1:4] == [2, 5, 6, 7]
+    @test [cards_at_round(PERFECT_RECALL, round) for round in 1:4] == [2, 5, 6, 7]
+    @test [cards_at_round(FLOP_RECALL, round) for round in 1:4] == [2, 5, 6, 7]
+    @test [cards_at_round(BOARD_RECALL, round) for round in 1:4] == [1, 3, 4, 5]
+end
 
 @testset "round sizes" begin
-    preflop = HI.Indexer((2,))
-    flop = HI.Indexer((2, 3))
-    turn = HI.Indexer((2, 3, 1))
-    river = HI.Indexer((2, 3, 1, 1))
-
-    @test round_size(preflop, 1) == 169
-    @test round_size(flop, 1) == 169
-    @test round_size(turn, 1) == 169
-    @test round_size(river, 1) == 169
-    @test round_size(flop, 2) == 1_286_792
-    @test round_size(turn, 2) == 1_286_792
-    @test round_size(river, 2) == 1_286_792
-    @test round_size(turn, 3) == 55_190_538
-    @test round_size(river, 3) == 55_190_538
-    @test round_size(river, 4) == 2_428_287_420
+    @test round_size(PERFECT_RECALL, 1) == 169
+    @test round_size(PERFECT_RECALL, 2) == 1_286_792
+    @test round_size(PERFECT_RECALL, 3) == 55_190_538
+    @test round_size(PERFECT_RECALL, 4) == 2_428_287_420
 end
 
 @testset "card and index conventions" begin
-    river = HI.Indexer((2, 3, 1, 1))
     cards = UInt8[1, 4, 9, 18, 23, 52, 47] # 2c, 2s, 4c, 6d, 7h, As, Ks
-    indices = Vector{UInt64}(undef, 4)
 
-    idx = index(river, cards, indices)
-    @test idx == index(river, cards)
-    @test indices[1] == 1
+    idx = index(PERFECT_RECALL, 4, cards)
+    @test index(PERFECT_RECALL, 1, cards) == 1
     for round in 1:4
-        @test 1 <= indices[round] <= round_size(river, round)
+        round_idx = index(PERFECT_RECALL, round, cards)
+        @test 1 <= round_idx <= round_size(PERFECT_RECALL, round)
     end
 
-    out = Vector{UInt8}(undef, 7)
-    @test unindex_all(river, 4, idx, out)
-    @test index(river, out) == idx
+    out = Vector{UInt8}(undef, cards_at_round(PERFECT_RECALL, 4))
+    @test unindex(PERFECT_RECALL, 4, idx, out)
+    @test index(PERFECT_RECALL, 4, out) == idx
     @test all(1 .<= out .<= 52)
 end
 
 @testset "isomorphism invariance" begin
-    river = HI.Indexer((2, 3, 1, 1))
     cards = UInt8[1, 4, 9, 18, 23, 52, 47]
     pi = (3, 2, 1, 0)
 
@@ -52,14 +50,13 @@ end
     end
     reordered = UInt8[permuted[2], permuted[1], permuted[5], permuted[3], permuted[4], permuted[6], permuted[7]]
 
-    @test index(river, cards) == index(river, permuted)
-    @test index(river, cards) == index(river, reordered)
+    @test index(PERFECT_RECALL, 4, cards) == index(PERFECT_RECALL, 4, permuted)
+    @test index(PERFECT_RECALL, 4, cards) == index(PERFECT_RECALL, 4, reordered)
 end
 
 @testset "random round trips" begin
-    river = HI.Indexer((2, 3, 1, 1))
     deck = collect(UInt8(1):UInt8(52))
-    out = Vector{UInt8}(undef, 7)
+    out = Vector{UInt8}(undef, cards_at_round(PERFECT_RECALL, 4))
     seed = UInt64(1)
 
     for _ in 1:10_000
@@ -68,24 +65,9 @@ end
             j = i + Int(seed % UInt64(53 - i))
             deck[i], deck[j] = deck[j], deck[i]
         end
-        idx = index(river, deck)
-        @test 1 <= idx <= round_size(river, 4)
-        @test unindex_all(river, 4, idx, out)
-        @test index(river, out) == idx
+        idx = index(PERFECT_RECALL, 4, deck)
+        @test 1 <= idx <= round_size(PERFECT_RECALL, 4)
+        @test unindex(PERFECT_RECALL, 4, idx, out)
+        @test index(PERFECT_RECALL, 4, out) == idx
     end
-end
-
-@testset "exported functions do not allocate" begin
-    river = HI.Indexer((2, 3, 1, 1))
-    cards = UInt8[1, 4, 9, 18, 23, 52, 47]
-    indices = Vector{UInt64}(undef, 4)
-    out = Vector{UInt8}(undef, 7)
-
-    idx = index(river, cards, indices)
-    unindex_all(river, 4, idx, out)
-
-    @test @allocated(round_size(river, 4)) == 0
-    @test @allocated(index(river, cards)) == 0
-    @test @allocated(index(river, cards, indices)) == 0
-    @test @allocated(unindex_all(river, 4, idx, out)) == 0
 end

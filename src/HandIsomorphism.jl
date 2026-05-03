@@ -1,6 +1,14 @@
 module HandIsomorphism
 
-export Recall, round_size, index, unindex, cards_at_round
+export Recall,
+    IMPERFECT_RECALL,
+    PERFECT_RECALL,
+    FLOP_RECALL,
+    BOARD_RECALL,
+    round_size,
+    index,
+    unindex,
+    cards_at_round
 
 const SUITS = 4
 const RANKS = 13

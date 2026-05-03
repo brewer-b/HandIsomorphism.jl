@@ -17,13 +17,13 @@ struct Recall
         n_rounds = length(cpr_per_round)
         indexers = Vector{Indexer}(undef, n_rounds)
         total_cards = Vector{Int}(undef, n_rounds)
-        
+
         for i in 1:n_rounds
             cpr_tuple = Tuple(UInt8.(cpr_per_round[i]))
             indexers[i] = Indexer(cpr_tuple)
             total_cards[i] = sum(cpr_per_round[i])
         end
-        
+
         return new(
             [Vector{UInt8}(v) for v in cpr_per_round],
             indexers,
@@ -66,3 +66,8 @@ Use this to ensure your `cards` buffers are the correct size before calling `ind
 @inline function cards_at_round(recall::Recall, round)
     return recall.total_cards_per_round[round]
 end
+
+const IMPERFECT_RECALL = Recall([[2], [2, 3], [2, 4], [2, 5]])
+const PERFECT_RECALL = Recall([[2], [2, 3], [2, 3, 1], [2, 3, 1, 1]])
+const FLOP_RECALL = Recall([[2], [2, 3], [2, 3, 1], [2, 3, 2]])
+const BOARD_RECALL = Recall([[1], [3], [4], [5]])
