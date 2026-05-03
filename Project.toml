@@ -1,7 +1,7 @@
 name = "HandIsomorphism"
 uuid = "df4aafef-d51b-490c-a6af-987e924bce54"
-authors = ["Brian Brewer <44099384+brewer-b@users.noreply.github.com> and contributors"]
 version = "1.0.0-DEV"
+authors = ["Brian Brewer <44099384+brewer-b@users.noreply.github.com> and contributors"]
 
 [compat]
 julia = "1.12.6"
