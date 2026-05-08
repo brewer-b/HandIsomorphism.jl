@@ -85,16 +85,17 @@ The `cards` argument should be an iterable collection of card integers.
     end
 end
 
+
+@inline function _unindex(indexer::Indexer, idx, cards)
+    return _unindex_all(indexer, length(indexer.cards_per_round), idx, cards)
+end
+
 """
 Performs the inverse of `index`. Takes a canonical `idx` and populates the `cards` 
 buffer with a representative hand for that equivalence class at the specified `round`.
 Returns `true` if the operation was successful.
 """
-@inline function _unindex(indexer::Indexer, idx, cards)
-    return unindex_all(indexer, length(indexer.cards_per_round), idx, cards)
-end
-
-@inline function unindex(recall::Recall, round::Integer, idx, cards)
+@inline function unindex!(recall::Recall, round::Integer, idx, cards)
     r = Int(round)
     if r == 1
         return _unindex(getfield(recall.indexers, 1), idx, cards)
@@ -111,7 +112,7 @@ end
 
 """
 Returns the total number of cards expected by the indexer at a specific `round`. 
-Use this to ensure your `cards` buffers are the correct size before calling `index` or `unindex`.
+Use this to ensure your `cards` buffers are the correct size before calling `index` or `unindex!`.
 """
 @inline function cards_at_round(recall::Recall, round::Integer)
     r = Int(round)

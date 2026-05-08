@@ -2,7 +2,7 @@
 
 `HandIsomorphism.jl` provides canonical isomorphism indices for poker hands across
 betting rounds. The public API is built around `Recall` objects: choose a recall
-scheme, then call `round_size`, `index`, `unindex`, and `cards_at_round`.
+scheme, then call `round_size`, `index`, `unindex!`, and `cards_at_round`.
 
 ## Quick Start
 
@@ -15,10 +15,10 @@ idx = index(PERFECT_RECALL, 4, cards)
 size = round_size(PERFECT_RECALL, 4)
 
 out = Vector{UInt8}(undef, cards_at_round(PERFECT_RECALL, 4))
-ok = unindex(PERFECT_RECALL, 4, idx, out)
+ok = unindex!(PERFECT_RECALL, 4, idx, out)
 ```
 
-Indices are 1-based Julia integers. `unindex` fills `out` with one representative
+Indices are 1-based Julia integers. `unindex!` fills `out` with one representative
 hand from the isomorphism class and returns `true` when successful.
 
 ## Recall Presets
@@ -54,7 +54,7 @@ index(recall, round, cards)
 Returns the canonical index for `cards` at `round`.
 
 ```julia
-unindex(recall, round, idx, cards)
+unindex!(recall, round, idx, cards)
 ```
 
 Writes a representative hand for `idx` into `cards` and returns whether the

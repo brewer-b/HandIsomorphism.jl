@@ -33,7 +33,7 @@ end
     end
 
     out = Vector{UInt8}(undef, cards_at_round(PERFECT_RECALL, 4))
-    @test unindex(PERFECT_RECALL, 4, idx, out)
+    @test unindex!(PERFECT_RECALL, 4, idx, out)
     @test index(PERFECT_RECALL, 4, out) == idx
     @test all(1 .<= out .<= 52)
 end
@@ -67,7 +67,7 @@ end
         end
         idx = index(PERFECT_RECALL, 4, deck)
         @test 1 <= idx <= round_size(PERFECT_RECALL, 4)
-        @test unindex(PERFECT_RECALL, 4, idx, out)
+        @test unindex!(PERFECT_RECALL, 4, idx, out)
         @test index(PERFECT_RECALL, 4, out) == idx
     end
 end
@@ -79,10 +79,10 @@ end
 
     round_size(PERFECT_RECALL, 4)
     cards_at_round(PERFECT_RECALL, 4)
-    unindex(PERFECT_RECALL, 4, idx, out)
+    unindex!(PERFECT_RECALL, 4, idx, out)
 
     @test @allocated(index(PERFECT_RECALL, 4, cards)) == 0
     @test @allocated(round_size(PERFECT_RECALL, 4)) == 0
     @test @allocated(cards_at_round(PERFECT_RECALL, 4)) == 0
-    @test @allocated(unindex(PERFECT_RECALL, 4, idx, out)) == 0
+    @test @allocated(unindex!(PERFECT_RECALL, 4, idx, out)) == 0
 end

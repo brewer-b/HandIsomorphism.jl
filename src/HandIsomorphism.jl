@@ -7,7 +7,7 @@ export Recall,
     BOARD_RECALL,
     round_size,
     index,
-    unindex,
+    unindex!,
     cards_at_round
 
 const SUITS = 4
@@ -158,7 +158,7 @@ Indexer(cards_per_round::AbstractVector{<:Integer}) = Indexer(Tuple(cards_per_ro
 
 @inline index(indexer::Indexer, cards, indices) = _index(indexer, cards, indices)
 
-function unindex_all(indexer::Indexer{R}, round::Integer, idx::Integer, cards) where {R}
+function _unindex_all(indexer::Indexer{R}, round::Integer, idx::Integer, cards) where {R}
     public_round = Int(round)
     if public_round < 1 || public_round > R || idx < 1
         return false
